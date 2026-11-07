@@ -118,7 +118,7 @@ public class EmployeeDAO {
                 Statement statement = databaseConnector.getConnection().createStatement()
         ) {
             try (ResultSet resultSet = statement.executeQuery(sql)) {
-                List<Employee> employees = new ArrayList<>();
+                ArrayList<Employee> employees = new ArrayList<>();
                 Employee employee;
 
                 while (resultSet.next()) {
