@@ -11,12 +11,6 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class EmployeeDAO {
-    private final DatabaseConnector databaseConnector;
-
-    public EmployeeDAO(DatabaseConnector databaseConnector) {
-        this.databaseConnector = databaseConnector;
-    }
-
     public Employee add(Employee employee) {
         Objects.requireNonNull(employee, "Employee must not be null");
 
@@ -26,7 +20,10 @@ public class EmployeeDAO {
 
         String sql = "INSERT INTO employees (name, age, position, salary) VALUES (?, ?, ?, ?) RETURNING *";
 
-        try (PreparedStatement preparedStatement = this.databaseConnector.getConnection().prepareStatement(sql)) {
+        try (
+                DatabaseConnector databaseConnector = new DatabaseConnector();
+                PreparedStatement preparedStatement = databaseConnector.getConnection().prepareStatement(sql)
+        ) {
             preparedStatement.setString(1, employee.name());
             preparedStatement.setInt(2, employee.age());
             preparedStatement.setString(3, employee.position());
@@ -54,7 +51,10 @@ public class EmployeeDAO {
 
         String sql = "UPDATE employees SET name = ?, age = ?, position = ?, salary = ? WHERE id = ? RETURNING *";
 
-        try (PreparedStatement preparedStatement = this.databaseConnector.getConnection().prepareStatement(sql)) {
+        try (
+                DatabaseConnector databaseConnector = new DatabaseConnector();
+                PreparedStatement preparedStatement = databaseConnector.getConnection().prepareStatement(sql)
+        ) {
             preparedStatement.setString(1, employee.name());
             preparedStatement.setInt(2, employee.age());
             preparedStatement.setString(3, employee.position());
@@ -76,7 +76,10 @@ public class EmployeeDAO {
     public boolean deleteById(int id) {
         String sql = "DELETE FROM employees WHERE id = ?";
 
-        try (PreparedStatement preparedStatement = this.databaseConnector.getConnection().prepareStatement(sql)) {
+        try (
+                DatabaseConnector databaseConnector = new DatabaseConnector();
+                PreparedStatement preparedStatement = databaseConnector.getConnection().prepareStatement(sql)
+        ) {
             preparedStatement.setInt(1, id);
 
             int affectedRows = preparedStatement.executeUpdate();
@@ -90,7 +93,9 @@ public class EmployeeDAO {
     public Optional<Employee> getById(int id) {
         String sql = "SELECT * FROM employees WHERE id = ?";
 
-        try (PreparedStatement preparedStatement = this.databaseConnector.getConnection().prepareStatement(sql)) {
+        try (DatabaseConnector databaseConnector = new DatabaseConnector();
+                PreparedStatement preparedStatement = databaseConnector.getConnection().prepareStatement(sql)
+        ) {
             preparedStatement.setInt(1, id);
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -108,7 +113,10 @@ public class EmployeeDAO {
     public List<Employee> getAll() {
         String sql = "SELECT * FROM employees";
 
-        try (Statement statement = this.databaseConnector.getConnection().createStatement()) {
+        try (
+                DatabaseConnector databaseConnector = new DatabaseConnector();
+                Statement statement = databaseConnector.getConnection().createStatement()
+        ) {
             try (ResultSet resultSet = statement.executeQuery(sql)) {
                 List<Employee> employees = new ArrayList<>();
                 Employee employee;

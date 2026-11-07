@@ -9,7 +9,7 @@ public class Main {
             SchemaInitializer schemaInitializer = new SchemaInitializer(databaseConnector);
             schemaInitializer.createEmployeesTable();
 
-            EmployeeDAO employeeDAO = new EmployeeDAO(databaseConnector);
+            EmployeeDAO employeeDAO = new EmployeeDAO();
 
             System.out.println("Initial number of employees: " + employeeDAO.getAll().size());
 

@@ -6,7 +6,19 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DatabaseConnector implements AutoCloseable {
+    private static final PGSimpleDataSource dataSource;
+
     private Connection connection;
+
+    static {
+        DBConfig dbConfig = DBConfigReader.getDBConfig();
+
+        dataSource = new PGSimpleDataSource();
+
+        dataSource.setUrl(dbConfig.url());
+        dataSource.setUser(dbConfig.username());
+        dataSource.setPassword(dbConfig.password());
+    }
 
     public Connection getConnection() {
         if (this.connection == null) {
@@ -17,14 +29,6 @@ public class DatabaseConnector implements AutoCloseable {
     }
 
     private void connect() {
-        PGSimpleDataSource dataSource = new PGSimpleDataSource();
-
-        DBConfig dbConfig = DBConfigReader.getDBConfig();
-
-        dataSource.setUrl(dbConfig.url());
-        dataSource.setUser(dbConfig.username());
-        dataSource.setPassword(dbConfig.password());
-
         try {
             this.connection = dataSource.getConnection();
             System.out.println("Connected");
