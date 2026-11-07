@@ -134,7 +134,7 @@ public class EmployeeDAO {
     }
 
     private Employee resultSetToEmployee(ResultSet resultSet) throws SQLException {
-        int id = resultSet.getInt("id");
+        Integer id = resultSet.getInt("id");
         String name = resultSet.getString("name");
         int age = resultSet.getInt("age");
         String position = resultSet.getString("position");
